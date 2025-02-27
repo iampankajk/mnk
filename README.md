@@ -22,6 +22,7 @@ The **RuleBuilder** project is a React-based application that provides a rule-bu
   │   │   ├── RuleItem.tsx      # Represents individual rule items
   │   │   ├── RuleSummary.tsx   # Displays a summary of built rules
   │   ├── ui/                 # UI components (buttons, inputs, dialogs, etc.)
+  │   ├──Header.tsx           # Header UI of app
   ├── lib/                    # Utility functions
   │   ├── utils.ts             # Common helper functions
   ├── types/                  # TypeScript types
