@@ -34,7 +34,7 @@ export const RULE_OPERATORS: Record<RuleType, Operator[]> = {
   specific_collections: ['contains_any', 'is_not'],
   product_tags: ['contains_any', 'is_not'],
   product_vendors: ['contains_any', 'is_not'],
-  specific_products: ['equals_anything', 'contains_any', 'is_not'],
+  specific_products: ['contains_any', 'is_not'],
   product_subscribed: ['yes', 'no'],
   specific_discount_codes: ['contains_any'],
   customer_tag: ['contains_any', 'is_not'],

@@ -12,15 +12,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Rule, RuleType } from '@/types/rules';
 
-const tags = [
-  { value: 'archived', label: 'Archived' },
-  { value: 'accessory', label: 'Accessory' },
-  { value: 'premium', label: 'Premium' },
-  { value: 'snow', label: 'Snow' },
-  { value: 'snowboard', label: 'Snowboard' },
-  { value: 'sport', label: 'Sport' },
-];
-
 const MOCK_OPTIONS = {
   specific_collections: [
     'Summer Collection',
@@ -97,7 +88,10 @@ export default function SearchMultiSelect({
           onBlur={() => setTimeout(() => setOpen(false), 100)}
         />
         <div className='text-sm text-muted-foreground'>
-          {getSelectedCount(rule.values)} {/* Use rule.values here */}
+          {getSelectedCount(
+            rule.values,
+            MOCK_OPTIONS[rule.type as keyof typeof MOCK_OPTIONS]?.length
+          )}
         </div>
       </div>
 
