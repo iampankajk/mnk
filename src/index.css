@@ -66,15 +66,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.rule-connector {
-  position: absolute;
-  z-index: 1;
-  height: 3rem;
-  width: 1rem;
-  top: -35px;
-  left: -15px;
-  border-left: 1px solid black;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-}

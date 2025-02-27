@@ -1,4 +1,4 @@
-import RuleBuilder from './components/RuleBuilder/RuleBuilder';
+import RuleBuilder from '@/components/RuleBuilder/RuleBuilder';
 
 function App() {
   return <RuleBuilder />;
