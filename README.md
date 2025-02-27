@@ -1,50 +1,84 @@
-# React + TypeScript + Vite
+# RuleBuilder Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+The **RuleBuilder** project is a React-based application that provides a rule-building interface. It includes modular components for defining and managing rules, UI elements, and utility functions.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **React** (with TypeScript)
+- **Vite** (for fast development)
+- **Tailwind CSS** (for styling)
+- **PostCSS** (for CSS processing)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Project Structure
 
-- Configure the top-level `parserOptions` property like this:
+```
+/src
+  ├── assets/                 # Static assets (images, icons, etc.)
+  ├── components/             # Main application components
+  │   ├── RuleBuilder/        # Core rule-building components
+  │   │   ├── RuleBuilder.tsx   # Main rule builder component
+  │   │   ├── RuleItem.tsx      # Represents individual rule items
+  │   │   ├── RuleSummary.tsx   # Displays a summary of built rules
+  │   ├── ui/                 # UI components (buttons, inputs, dialogs, etc.)
+  ├── lib/                    # Utility functions
+  │   ├── utils.ts             # Common helper functions
+  ├── types/                  # TypeScript types
+  │   ├── rules.ts             # Type definitions for rules
+  ├── App.tsx                  # Main application entry point
+  ├── index.tsx                # Renders the React app
+  ├── index.css                # Global styles
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Configuration files:
+  ├── tailwind.config.ts       # Tailwind CSS configuration
+  ├── tsconfig.json            # TypeScript configuration
+  ├── vite.config.ts           # Vite configuration
+  ├── package.json             # Dependencies and scripts
+  ├── postcss.config.mjs       # PostCSS configuration
+  ├── components.json          # Component metadata
+  ├── .gitignore               # Ignored files
+  ├── README.md                # Project documentation
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Installation
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Prerequisites
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Ensure you have **Node.js (v20.18.0)** installed.
+
+### Steps
+
+1. Clone the repository:
+   ```sh
+   git clone <repo-url>
+   cd <project-folder>
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
+4. Open `http://localhost:5173/` (or as specified in the terminal) to view the project.
+
+## Usage
+
+- The main component is `RuleBuilder.tsx`, which handles rule creation.
+- The UI folder contains reusable UI components.
+- The `types` folder defines TypeScript types for the rule system.
+- The project follows a modular component structure for scalability.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -m 'Add feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Create a pull request.
+
+---
+
+Happy Coding! 🚀
