@@ -138,8 +138,8 @@ const RuleBuilder: React.FC = () => {
   };
 
   return (
-    <div className='flex h-full max-w-6xl mx-auto gap-4 p-2'>
-      <div className='bg-white rounded-lg shadow-lg flex-1 p-6 overflow-auto'>
+    <div className='flex h-full max-w-6xl mx-auto gap-4 p-2 flex-col lg:flex-row'>
+      <div className='bg-white rounded-lg shadow-lg flex-1 p-4 md:p-6 overflow-auto'>
         {/* Header Section */}
         <div className='space-y-2'>
           <h2 className='text-xl font-medium text-gray-700'>Rule</h2>

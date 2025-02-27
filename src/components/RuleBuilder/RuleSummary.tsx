@@ -84,7 +84,7 @@ const formatRule = (rule: Rule) => {
 };
 
 const RuleSummary = ({ rules }: { rules: Rule[] }) => (
-  <div className='bg-white shadow-md rounded-lg p-4 w-[25%] border'>
+  <div className='bg-white shadow-md rounded-lg p-4 w-full mt-4 lg:mt-0 lg:w-[25%] lg:min-w-[300px] border'>
     <h2 className='text-lg font-semibold'>Summary</h2>
     <hr className='my-2' />
     <h3 className='text-md font-semibold'>Eligibility Rules</h3>

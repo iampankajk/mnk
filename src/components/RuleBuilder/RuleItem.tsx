@@ -51,52 +51,64 @@ export const RuleItem = React.memo(
     const previousRuleValuesLength = rules[index - 1]?.values.length || 0;
 
     return (
-      <div className='relative pl-4'>
+      <div className='relative pl-2 md:pl-4'>
         {/* Display the "AND" connector between rules when more than one exists */}
         {index > 0 && (
           <div
-            className={`absolute z-10 left-[-15px] border-l-2 border-t-2 border-b-2 flex items-center my-2 ${
+            className={`absolute z-10 left-[-8px] hidden md:flex md:left-[-15px] border-l-2 border-t-2 border-b-2  items-center my-2 ${
               previousRuleValuesLength > 0
                 ? 'h-[5.5rem] top-[-4.5rem]'
                 : 'h-[3.5rem] top-[-2.5rem]'
             }`}
           >
-            <span className='text-sm font-medium text-gray-500'>AND</span>
+            <span className='text-xs md:text-sm'>AND</span>
           </div>
         )}
 
-        <div className='flex items-center gap-4 mb-2'>
+        {index > 0 && (
+          <span className='absolute top-[-2.5rem] right-0 text-xs md:text-sm md:hidden'>
+            AND
+          </span>
+        )}
+
+        <div className='flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-2'>
           {/* Dropdown to select rule type */}
-          <RuleSelect
-            rule={rule}
-            updateRule={updateRule}
-            RULE_CATEGORIES={RULE_CATEGORIES}
-            isRuleDisabled={(type) => rules.some((r) => r.type === type)}
-          />
+          <div className='w-full md:flex-1'>
+            <RuleSelect
+              rule={rule}
+              updateRule={updateRule}
+              RULE_CATEGORIES={RULE_CATEGORIES}
+              isRuleDisabled={(type) => rules.some((r) => r.type === type)}
+            />
+          </div>
 
           {/* Operator selection dropdown, disabled for specific rule types */}
           {rule.type !== RuleTypeEnum.SPECIFIC_DISCOUNT_CODES &&
             rule.type !== RuleTypeEnum.CUSTOMER_TAG && (
-              <OperatorSelect
-                rule={rule}
-                updateRule={updateRule}
-                RULE_OPERATORS={RULE_OPERATORS}
-                isOperatorDisabled={(type, operator) => {
-                  if (!MUTUALLY_EXCLUSIVE_RULES.has(type)) return false;
+              <div className='w-full md:flex-1'>
+                <OperatorSelect
+                  rule={rule}
+                  updateRule={updateRule}
+                  RULE_OPERATORS={RULE_OPERATORS}
+                  isOperatorDisabled={(type, operator) => {
+                    if (!MUTUALLY_EXCLUSIVE_RULES.has(type)) return false;
 
-                  const otherRuleType =
-                    type === 'specific_collections'
-                      ? 'specific_products'
-                      : 'specific_collections';
-                  const otherRule = rules.find((r) => r.type === otherRuleType);
+                    const otherRuleType =
+                      type === 'specific_collections'
+                        ? 'specific_products'
+                        : 'specific_collections';
+                    const otherRule = rules.find(
+                      (r) => r.type === otherRuleType
+                    );
 
-                  if (otherRule) {
-                    return operator === otherRule.operator;
-                  }
+                    if (otherRule) {
+                      return operator === otherRule.operator;
+                    }
 
-                  return false;
-                }}
-              />
+                    return false;
+                  }}
+                />
+              </div>
             )}
 
           {/* Input fields based on the rule type */}
