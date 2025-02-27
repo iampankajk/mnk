@@ -57,36 +57,48 @@ export default function SearchMultiSelect({
   const [searchValue, setSearchValue] = React.useState('');
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-  // ... (keep useEffect and other logic the same)
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+        setSearchValue('');
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const getFilteredOptions = (type: RuleType, ruleId: string) => {
     const rule = rules.find((r) => r.id === ruleId);
     if (!rule) return [];
 
     const options = MOCK_OPTIONS[type as keyof typeof MOCK_OPTIONS] || [];
-    const filteredOptions = searchValue
+    return searchValue
       ? options.filter((opt) =>
           opt.toLowerCase().includes(searchValue.toLowerCase())
         )
       : options;
-
-    return filteredOptions;
   };
 
   return (
     <div className='relative w-full max-w-md' ref={dropdownRef}>
       <div
-        className='flex items-center rounded-lg border shadow-sm px-3 h-11'
-        onClick={() => setOpen(true)}
+        className='flex items-center rounded-lg border shadow-sm px-3 h-11 cursor-pointer'
+        onClick={() => setOpen((prev) => !prev)}
       >
         <Search className='mr-2 h-4 w-4 shrink-0 opacity-50' />
         <Input
-          placeholder='Search product tags'
-          className='border-0 h-9 flex-1 bg-transparent outline-none focus:outline-none focus:bottom-0 placeholder:text-muted-foreground'
+          placeholder={`Search ${rule.type.split('_').join(' ')}...`}
+          className='h-9 flex-1 bg-transparent border-0 outline-none focus:outline-none focus:ring-0 focus:border-transparent focus-visible:ring-0 focus-visible:outline-none placeholder:text-muted-foreground'
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          onBlur={() => setTimeout(() => setOpen(false), 100)}
         />
+
         <div className='text-sm text-muted-foreground'>
           {getSelectedCount(
             rule.values,
@@ -104,8 +116,8 @@ export default function SearchMultiSelect({
                 {getFilteredOptions(rule.type, rule.id).map((option) => (
                   <CommandItem
                     key={option}
+                    onMouseDown={(e) => e.stopPropagation()} // Prevent dropdown from closing on checkbox click
                     onSelect={() => {
-                      // Simplified handler
                       if (rule.values.includes(option)) {
                         removeValueFromRule(rule.id, option);
                       } else {
@@ -115,7 +127,7 @@ export default function SearchMultiSelect({
                     className='flex items-center gap-2 px-3 py-2 hover:bg-accent cursor-pointer'
                   >
                     <Checkbox
-                      checked={rule.values.includes(option)} // Directly check rule.values
+                      checked={rule.values.includes(option)}
                       className={cn(
                         rule.values.includes(option)
                           ? 'opacity-100'
