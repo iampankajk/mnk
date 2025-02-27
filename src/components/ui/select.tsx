@@ -190,7 +190,10 @@ export function RuleSelect({
       <SelectTrigger className='border rounded px-3 py-2 bg-white w-full'>
         <SelectValue placeholder='Select rule' />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent
+        className='max-h-[300px] overflow-auto w-full'
+        position='popper'
+      >
         {Object.entries(RULE_CATEGORIES).map(([category, categoryRules]) => (
           <SelectGroup key={category}>
             <div className='px-2 py-1 text-sm font-semibold text-gray-500'>

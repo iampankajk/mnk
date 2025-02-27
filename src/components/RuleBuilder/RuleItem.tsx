@@ -84,16 +84,17 @@ export const RuleItem = React.memo(
                 isOperatorDisabled={(type, operator) => {
                   if (!MUTUALLY_EXCLUSIVE_RULES.has(type)) return false;
 
-                  // Check if there is a related mutually exclusive rule
-                  const relatedRule = rules.find(
-                    (r) =>
-                      MUTUALLY_EXCLUSIVE_RULES.has(r.type) && r.type !== type
-                  );
-                  if (!relatedRule) return false;
-                  return (
-                    (operator === 'contains_any') ===
-                    (relatedRule.operator === 'contains_any')
-                  );
+                  const otherRuleType =
+                    type === 'specific_collections'
+                      ? 'specific_products'
+                      : 'specific_collections';
+                  const otherRule = rules.find((r) => r.type === otherRuleType);
+
+                  if (otherRule) {
+                    return operator === otherRule.operator;
+                  }
+
+                  return false;
                 }}
               />
             )}

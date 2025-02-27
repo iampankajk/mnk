@@ -1,6 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Plus } from 'lucide-react';
-import { Rule, RULE_PRIORITY, RULE_OPERATORS } from '@/types/rules';
+import {
+  Rule,
+  RULE_PRIORITY,
+  RULE_OPERATORS,
+  MUTUALLY_EXCLUSIVE_RULES,
+  RuleTypeEnum,
+} from '@/types/rules';
 import { Button } from '@/components/ui/button';
 import { RuleItem } from './RuleItem';
 import RuleSummary from './RuleSummary';
@@ -28,21 +34,29 @@ const RuleBuilder: React.FC = () => {
   const addRule = () => {
     setRules((currentRules) => {
       const usedTypes = new Set(currentRules.map((rule) => rule.type));
-
-      // Find the first unused rule type based on priority
       const newType = RULE_PRIORITY.find((type) => !usedTypes.has(type));
+      if (!newType) return currentRules;
 
-      if (!newType) {
-        // If all rule types are already used, do nothing
-        return currentRules;
-      }
-
-      const newRule: Rule = {
-        id: Math.random().toString(36).substring(2, 9), // Generate a unique ID
+      let newRule: Rule = {
+        id: Math.random().toString(36).substring(2, 9),
         type: newType,
-        operator: RULE_OPERATORS[newType][0], // Set default operator for the rule type
-        values: [], // Initialize values as an empty array
+        operator: RULE_OPERATORS[newType][0],
+        values: [],
       };
+
+      // Handle mutual exclusivity when adding a new rule
+      if (MUTUALLY_EXCLUSIVE_RULES.has(newType)) {
+        const otherRuleType =
+          newType === RuleTypeEnum.SPECIFIC_COLLECTIONS
+            ? RuleTypeEnum.SPECIFIC_PRODUCTS
+            : RuleTypeEnum.SPECIFIC_COLLECTIONS;
+        const otherRule = currentRules.find((r) => r.type === otherRuleType);
+
+        if (otherRule) {
+          newRule.operator =
+            otherRule.operator === 'contains_any' ? 'is_not' : 'contains_any';
+        }
+      }
 
       return sortRulesByPriority([...currentRules, newRule]);
     });
@@ -57,14 +71,39 @@ const RuleBuilder: React.FC = () => {
   const updateRule = useCallback(
     (ruleId: string, updates: Partial<Rule>, resetOperator = false) => {
       setRules((currentRules) => {
-        const updatedRules = currentRules.map((rule) => {
-          if (rule.id !== ruleId) return rule; // Skip if it's not the target rule
+        let updatedRules = currentRules.map((rule) => {
+          if (rule.id !== ruleId) return rule;
+          const newRule = { ...rule, ...updates };
           if (resetOperator && updates.type) {
-            updates.operator = RULE_OPERATORS[updates.type][0]; // Reset operator if rule type changes
-            updates.values = []; // Reset values when type changes
+            newRule.operator = RULE_OPERATORS[updates.type][0];
+            newRule.values = [];
           }
-          return { ...rule, ...updates };
+          return newRule;
         });
+
+        // Handle mutual exclusivity between specific_collections and specific_products
+        const updatedRule = updatedRules.find((r) => r.id === ruleId);
+        if (updatedRule && MUTUALLY_EXCLUSIVE_RULES.has(updatedRule.type)) {
+          const otherRuleType =
+            updatedRule.type === RuleTypeEnum.SPECIFIC_COLLECTIONS
+              ? RuleTypeEnum.SPECIFIC_PRODUCTS
+              : RuleTypeEnum.SPECIFIC_COLLECTIONS;
+          const otherRule = updatedRules.find((r) => r.type === otherRuleType);
+
+          if (otherRule) {
+            const oppositeOperator =
+              updatedRule.operator === 'contains_any'
+                ? 'is_not'
+                : 'contains_any';
+            updatedRules = updatedRules.map((r) => {
+              if (r.type === otherRuleType) {
+                return { ...r, operator: oppositeOperator };
+              }
+              return r;
+            });
+          }
+        }
+
         return sortRulesByPriority(updatedRules);
       });
     },
@@ -99,8 +138,8 @@ const RuleBuilder: React.FC = () => {
   };
 
   return (
-    <div className='flex max-w-6xl mx-auto gap-4 p-2'>
-      <div className='bg-white rounded-lg shadow-lg flex-1 p-6'>
+    <div className='flex h-full max-w-6xl mx-auto gap-4 p-2'>
+      <div className='bg-white rounded-lg shadow-lg flex-1 p-6 overflow-auto'>
         {/* Header Section */}
         <div className='space-y-2'>
           <h2 className='text-xl font-medium text-gray-700'>Rule</h2>
