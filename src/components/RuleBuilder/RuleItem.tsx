@@ -42,7 +42,7 @@ export const RuleItem = React.memo(
     removeRule: (ruleId: string) => void;
     addValueToRule: (ruleId: string, value: string) => void;
     removeValueFromRule: (ruleId: string, value: string) => void;
-    getSelectedCount: any;
+    getSelectedCount: (values: string[], totalOptions: number) => string;
   }) => {
     // Check if the current rule type requires a multi-select input
     const needsMultiselect = MULTISELECT_RULE_TYPES.has(rule.type);

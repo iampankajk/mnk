@@ -49,9 +49,9 @@ export default function SearchMultiSelect({
 }: {
   rules: Rule[];
   rule: Rule;
-  addValueToRule: any;
-  removeValueFromRule: any;
-  getSelectedCount: any;
+  addValueToRule: (ruleId: string, value: string) => void;
+  removeValueFromRule: (ruleId: string, value: string) => void;
+  getSelectedCount: (values: string[], totalOptions: number) => string;
 }) {
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
